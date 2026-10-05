@@ -21,13 +21,13 @@ public class Category_24110344 implements Serializable {
 	@Column(name = "CategoryId")
 	private Integer categoryId;
 
-	@Column(name = "Categoryname", length = 100)
+	@Column(name = "Categoryname", columnDefinition = "NVARCHAR(100)")
 	private String categoryname;
 
-	@Column(name = "Categorycode", length = 100)
+	@Column(name = "Categorycode", columnDefinition = "NVARCHAR(100)")
 	private String categorycode;
 
-	@Column(name = "Images", length = 500)
+	@Column(name = "Images", columnDefinition = "NVARCHAR(500)")
 	private String images;
 
 	@Column(name = "Status")

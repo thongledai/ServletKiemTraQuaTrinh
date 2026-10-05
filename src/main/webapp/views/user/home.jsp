@@ -1,119 +1,117 @@
-<%@ page language="java"
-    contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
-<%@ taglib prefix="c"
-    uri="jakarta.tags.core"%>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Danh Sách Video</h1>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">
+            <c:choose>
+                <c:when test="${not empty category}">
+                    Chủ đề: <b>${category.categoryname}</b>
+                </c:when>
+                <c:otherwise>
+                    Tất cả thể loại video
+                </c:otherwise>
+            </c:choose>
+        </p>
+    </div>
+</div>
 
-<h2>TRANG CHỦ USER</h2>
-
-<h3>Danh mục</h3>
-
-<c:forEach var="c"
-           items="${categories}">
-
-    <a href="${pageContext.request.contextPath}/user/home?categoryId=${c.categoryId}">
-        ${c.categoryname}
+<!-- Thanh danh mục dạng Chip / Tag -->
+<div class="category-chips">
+    <a href="${pageContext.request.contextPath}/user/home"
+       class="chip ${empty param.categoryId ? 'active' : ''}">
+        Tất cả
     </a>
 
-    (${c.videoCount})
-
-    &nbsp;&nbsp;
-
-</c:forEach>
-
-<hr>
-
-<h2>
-    Category:
-    ${category.categoryname}
-</h2>
-
-<table border="1"
-       cellpadding="10"
-       cellspacing="0">
-
-    <tr>
-
-        <th>Poster</th>
-        <th>Tiêu đề</th>
-        <th>Mã video</th>
-        <th>Category</th>
-        <th>View</th>
-        <th>Chi tiết</th>
-
-    </tr>
-
-    <c:forEach var="video"
-               items="${videos}">
-
-        <tr>
-
-            <td>
-
-                <img
-                    src="${pageContext.request.contextPath}/uploads/${video.poster}"
-                    width="150"
-                    height="100">
-
-            </td>
-
-            <td>
-                ${video.title}
-            </td>
-
-            <td>
-                ${video.videoId}
-            </td>
-
-            <td>
-                ${video.category.categoryname}
-            </td>
-
-            <td>
-                ${video.views}
-            </td>
-
-            <td>
-
-                <a href="${pageContext.request.contextPath}/video/detail?id=${video.videoId}">
-                    Xem
-                </a>
-
-            </td>
-
-        </tr>
-
+    <c:forEach var="c" items="${categories}">
+        <a href="${pageContext.request.contextPath}/user/home?categoryId=${c.categoryId}"
+           class="chip ${param.categoryId == c.categoryId ? 'active' : ''}">
+            <span>${c.categoryname}</span>
+            <span class="chip-count">${c.videoCount}</span>
+        </a>
     </c:forEach>
+</div>
 
-</table>
+<!-- Danh sách Video dạng lưới (Card Grid) -->
+<c:choose>
+    <c:when test="${empty videos}">
+        <div class="card" style="text-align: center; padding: 40px; color: var(--text-muted);">
+            <p style="font-size: 16px;">Hiện chưa có video nào trong danh mục này.</p>
+            <a href="${pageContext.request.contextPath}/user/home" class="btn btn-secondary" style="margin-top: 12px;">
+                Xem tất cả video
+            </a>
+        </div>
+    </c:when>
+    <c:otherwise>
+        <div class="video-grid">
+            <c:forEach var="video" items="${videos}">
+                <div class="video-card">
+                    <a href="${pageContext.request.contextPath}/video/detail?id=${video.videoId}">
+                        <img src="${pageContext.request.contextPath}/uploads/${video.poster}"
+                             alt="${video.title}"
+                             class="video-thumb"
+                             onerror="this.onerror=null;this.src='https://placehold.co/300x200?text=No+Image';">
+                    </a>
 
-<br>
+                    <div class="video-body">
+                        <span class="badge badge-primary" style="margin-bottom: 8px; align-self: flex-start;">
+                            ${video.category.categoryname}
+                        </span>
 
-<c:if test="${totalPage > 1}">
+                        <a href="${pageContext.request.contextPath}/video/detail?id=${video.videoId}"
+                           style="text-decoration: none;">
+                            <h3 class="video-title" title="${video.title}">${video.title}</h3>
+                        </a>
 
-    <c:forEach var="i"
-               begin="1"
-               end="${totalPage}">
+                        <div class="video-meta">
+                            <span>👁️ ${video.views} lượt xem</span>
+                            <span>Mã: ${video.videoId}</span>
+                        </div>
 
-        <c:choose>
+                        <div class="video-price">
+                            <fmt:formatNumber value="${video.price}" pattern="#,##0" /> đ
+                        </div>
 
-            <c:when test="${i == page}">
+                        <div class="video-actions">
+                            <a href="${pageContext.request.contextPath}/video/detail?id=${video.videoId}"
+                               class="btn btn-secondary btn-sm" style="flex: 1;">
+                                Chi tiết
+                            </a>
 
-                <b>[${i}]</b>
+                            <form action="${pageContext.request.contextPath}/user/cart" method="post" style="flex: 1;">
+                                <input type="hidden" name="action" value="add">
+                                <input type="hidden" name="videoId" value="${video.videoId}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-primary btn-sm" style="width: 100%;">
+                                    + Giỏ hàng
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </c:forEach>
+        </div>
 
-            </c:when>
-
-            <c:otherwise>
-
-                <a href="${pageContext.request.contextPath}/user/home?categoryId=${categoryId}&page=${i}">
-                    ${i}
-                </a>
-
-            </c:otherwise>
-
-        </c:choose>
-
-    </c:forEach>
-
-</c:if>
+        <!-- Phân trang -->
+        <c:if test="${totalPage > 1}">
+            <div class="pagination">
+                <c:forEach var="i" begin="1" end="${totalPage}">
+                    <c:choose>
+                        <c:when test="${i == page}">
+                            <span class="page-item active">${i}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="${pageContext.request.contextPath}/user/home?categoryId=${categoryId}&page=${i}"
+                               class="page-item">
+                                ${i}
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </div>
+        </c:if>
+    </c:otherwise>
+</c:choose>

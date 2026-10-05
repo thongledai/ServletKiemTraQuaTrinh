@@ -1,6 +1,7 @@
 package vn.iotstar.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,16 +21,19 @@ public class Video_24110344 implements Serializable {
 	@Column(name = "VideoId", length = 50, nullable = false)
 	private String videoId;
 
-	@Column(name = "Title", length = 200)
+	@Column(name = "Title", columnDefinition = "NVARCHAR(200)")
 	private String title;
 
-	@Column(name = "Poster", length = 50)
+	@Column(name = "Poster", columnDefinition = "NVARCHAR(500)")
 	private String poster;
 
 	@Column(name = "Views")
 	private Integer views;
 
-	@Column(name = "Description", length = 500)
+	@Column(name = "Price", precision = 18, scale = 0, nullable = false)
+	private BigDecimal price = BigDecimal.ZERO;
+
+	@Column(name = "Description", columnDefinition = "NVARCHAR(500)")
 	private String description;
 
 	@Column(name = "Active")
@@ -42,8 +46,8 @@ public class Video_24110344 implements Serializable {
 	public Video_24110344() {
 	}
 
-	public Video_24110344(String videoId, String title, String poster, Integer views, String description, Boolean active,
-			Category_24110344 category) {
+	public Video_24110344(String videoId, String title, String poster, Integer views, String description,
+			Boolean active, Category_24110344 category) {
 
 		this.videoId = videoId;
 		this.title = title;
@@ -84,6 +88,14 @@ public class Video_24110344 implements Serializable {
 
 	public void setViews(Integer views) {
 		this.views = views;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
 	}
 
 	public String getDescription() {

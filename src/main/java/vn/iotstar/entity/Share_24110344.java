@@ -24,7 +24,7 @@ public class Share_24110344 implements Serializable {
 	@Column(name = "ShareId")
 	private Integer shareId;
 
-	@Column(name = "Emails", length = 50)
+	@Column(name = "Emails", columnDefinition = "NVARCHAR(150)")
 	private String emails;
 
 	@Column(name = "SharedDate")

@@ -14,19 +14,19 @@ public class User_24110344 implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "Username", length = 50, nullable = false)
+	@Column(name = "Username", columnDefinition = "NVARCHAR(50)", nullable = false)
 	private String username;
 
-	@Column(name = "Password", length = 50)
+	@Column(name = "Password", columnDefinition = "NVARCHAR(50)")
 	private String password;
 
-	@Column(name = "Phone", length = 15)
+	@Column(name = "Phone", columnDefinition = "NVARCHAR(15)")
 	private String phone;
 
-	@Column(name = "Fullname", length = 50)
+	@Column(name = "Fullname", columnDefinition = "NVARCHAR(100)")
 	private String fullname;
 
-	@Column(name = "Email", length = 150)
+	@Column(name = "Email", columnDefinition = "NVARCHAR(150)")
 	private String email;
 
 	@Column(name = "Admin")
@@ -35,7 +35,7 @@ public class User_24110344 implements Serializable {
 	@Column(name = "Active")
 	private Boolean active;
 
-	@Column(name = "Images", length = 500)
+	@Column(name = "Images", columnDefinition = "NVARCHAR(500)")
 	private String images;
 
 	public User_24110344() {

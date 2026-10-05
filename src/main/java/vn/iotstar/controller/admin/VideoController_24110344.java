@@ -2,6 +2,7 @@ package vn.iotstar.controller.admin;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 import jakarta.servlet.ServletException;
@@ -261,6 +262,17 @@ public class VideoController_24110344 extends HttpServlet {
 			}
 		}
 
+		BigDecimal price = parsePrice(req.getParameter("price"));
+
+		if (price == null) {
+
+			req.setAttribute("message", "Giá phải là số không âm");
+
+			loadCategoriesAndForward(req, resp);
+
+			return;
+		}
+
 		Integer categoryId;
 
 		try {
@@ -293,6 +305,7 @@ public class VideoController_24110344 extends HttpServlet {
 		video.setTitle(title);
 		video.setPoster(fileName);
 		video.setViews(views);
+		video.setPrice(price);
 		video.setDescription(description);
 		video.setActive(true);
 		video.setCategory(category);
@@ -345,6 +358,17 @@ public class VideoController_24110344 extends HttpServlet {
 			}
 		}
 
+		BigDecimal price = parsePrice(req.getParameter("price"));
+
+		if (price == null) {
+
+			req.setAttribute("message", "Giá phải là số không âm");
+
+			loadCategoriesAndForwardEdit(req, resp, video);
+
+			return;
+		}
+
 		Integer categoryId;
 
 		try {
@@ -393,12 +417,32 @@ public class VideoController_24110344 extends HttpServlet {
 		video.setTitle(title);
 		video.setPoster(fileName);
 		video.setViews(views);
+		video.setPrice(price);
 		video.setDescription(description);
 		video.setCategory(category);
 
 		videoService.update(video);
 
 		resp.sendRedirect(req.getContextPath() + "/admin/videos");
+	}
+
+	/** Tra ve null neu gia khong hop le (khong phai so hoac am). De trong = 0. */
+	private BigDecimal parsePrice(String value) {
+
+		if (value == null || value.isBlank()) {
+			return BigDecimal.ZERO;
+		}
+
+		try {
+
+			BigDecimal price = new BigDecimal(value.trim());
+
+			return price.signum() < 0 ? null : price;
+
+		} catch (NumberFormatException e) {
+
+			return null;
+		}
 	}
 
 	private void loadCategoriesAndForward(HttpServletRequest req, HttpServletResponse resp)

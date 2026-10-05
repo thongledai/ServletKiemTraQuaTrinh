@@ -1,34 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<style>
-body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-footer {
-    margin-top: auto;
-    padding: 15px;
-    background: black;
-    color: white;
-    font-size: 22px;
-    font-weight: bold;
-}
-
-.info {
-    width: 250px;
-    margin: auto;
-    line-height: 1.5;
-}
-</style>
-
-<footer>
-    <div class="info">
-        <div>Họ tên: Lê Đại Thông</div>
-        <div>MSSV: 24110344</div>
-        <div>Mã đề: 3</div>
+<footer class="main-footer">
+    <div class="footer-container">
+        <div>
+            <strong>Web Programming</strong> &bull; Bài kiểm tra quá trình
+        </div>
+        <div class="footer-info">
+            <div class="footer-item">
+                <span class="label">Họ tên:</span>
+                <span class="value">Lê Đại Thông</span>
+            </div>
+            <div class="footer-item">
+                <span class="label">MSSV:</span>
+                <span class="value">24110344</span>
+            </div>
+            <div class="footer-item">
+                <span class="label">Mã đề:</span>
+                <span class="value">3</span>
+            </div>
+        </div>
     </div>
 </footer>
