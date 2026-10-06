@@ -1,12 +1,14 @@
 package vn.iotstar.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import vn.iotstar.dao.OrderDao_24110344;
 import vn.iotstar.dao.impl.OrderDaoImpl_24110344;
 import vn.iotstar.entity.Order_24110344;
 import vn.iotstar.service.CartService_24110344;
 import vn.iotstar.service.OrderService_24110344;
+import vn.iotstar.util.OrderStatus_24110344;
 
 public class OrderServiceImpl_24110344 implements OrderService_24110344 {
 
@@ -48,5 +50,18 @@ public class OrderServiceImpl_24110344 implements OrderService_24110344 {
 	@Override
 	public Order_24110344 findByIdAndUsername(Integer orderId, String username) {
 		return orderDao.findByIdAndUsername(orderId, username);
+	}
+
+	@Override
+	public List<Order_24110344> findByUsernameAndStatus(String username, String status) {
+
+		OrderStatus_24110344 st = OrderStatus_24110344.fromCode(status);
+
+		return orderDao.findByUsernameAndStatus(username, st == null ? null : st.getCode());
+	}
+
+	@Override
+	public Map<String, Long> countByStatus(String username) {
+		return orderDao.countByStatus(username);
 	}
 }

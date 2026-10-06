@@ -25,7 +25,7 @@
     <!-- Thông tin đơn hàng -->
     <div class="card">
         <h3 style="font-size: 16px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
-            📌 Thông Tin Đơn Hàng
+            Thông Tin Đơn Hàng
         </h3>
         <p style="font-size: 14px; margin-bottom: 8px;">
             <strong>Mã đơn:</strong> #${order.orderId}
@@ -36,14 +36,9 @@
         </p>
         <p style="font-size: 14px; margin-bottom: 8px;">
             <strong>Trạng thái:</strong>
-            <c:choose>
-                <c:when test="${order.status == 'PENDING'}">
-                    <span class="badge badge-warning">Chờ xác nhận</span>
-                </c:when>
-                <c:otherwise>
-                    <span class="badge badge-success"><c:out value="${order.status}" /></span>
-                </c:otherwise>
-            </c:choose>
+            <span class="badge" style="background: ${order.statusBg}; color: ${order.statusColor};">
+                <c:out value="${order.statusLabel}" />
+            </span>
         </p>
         <p style="font-size: 14px;">
             <strong>Phương thức thanh toán:</strong>
@@ -57,7 +52,7 @@
     <!-- Thông tin người nhận -->
     <div class="card">
         <h3 style="font-size: 16px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
-            📍 Thông Tin Người Nhận
+            Thông Tin Người Nhận
         </h3>
         <p style="font-size: 14px; margin-bottom: 8px;">
             <strong>Người nhận:</strong> <c:out value="${order.receiverName}" />
@@ -128,6 +123,6 @@
 
 <div>
     <a href="${ctx}/user/home" class="btn btn-primary">
-        🎬 Tiếp tục khám phá video
+        Tiếp tục khám phá video
     </a>
 </div>

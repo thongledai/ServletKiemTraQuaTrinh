@@ -6,18 +6,46 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
 <div class="page-header">
-    <h1 class="page-title">📦 Lịch Sử Đơn Hàng</h1>
+    <h1 class="page-title">Lịch Sử Đơn Hàng</h1>
+</div>
+
+<!-- Tab lọc theo trạng thái -->
+<div class="category-chips">
+    <a href="${ctx}/user/orders" class="chip ${empty currentCode ? 'active' : ''}">
+        Tất cả <span class="chip-count">${totalCount}</span>
+    </a>
+
+    <c:forEach var="s" items="${statuses}">
+        <a href="${ctx}/user/orders?status=${s.code}"
+           class="chip ${currentCode == s.code ? 'active' : ''}">
+            <c:out value="${s.label}" />
+            <span class="chip-count">${counts[s.code]}</span>
+        </a>
+    </c:forEach>
 </div>
 
 <c:choose>
     <c:when test="${empty orders}">
         <div class="card" style="text-align: center; padding: 48px 24px;">
-            <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 16px;">
-                Bạn chưa có đơn hàng nào trong tài khoản.
-            </p>
-            <a href="${ctx}/user/home" class="btn btn-primary">
-                🎬 Khám phá sản phẩm ngay
-            </a>
+            <c:choose>
+                <c:when test="${empty current}">
+                    <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 16px;">
+                        Bạn chưa có đơn hàng nào trong tài khoản.
+                    </p>
+                    <a href="${ctx}/user/home" class="btn btn-primary">
+                        Khám phá sản phẩm ngay
+                    </a>
+                </c:when>
+                <c:otherwise>
+                    <p style="font-size: 16px; color: var(--text-muted); margin-bottom: 16px;">
+                        Không có đơn hàng nào ở trạng thái
+                        "<strong><c:out value="${current.label}" /></strong>".
+                    </p>
+                    <a href="${ctx}/user/orders" class="btn btn-secondary">
+                        Xem tất cả đơn hàng
+                    </a>
+                </c:otherwise>
+            </c:choose>
         </div>
     </c:when>
 
@@ -58,14 +86,9 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <c:choose>
-                                        <c:when test="${o.status == 'PENDING'}">
-                                            <span class="badge badge-warning">Chờ xác nhận</span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="badge badge-success"><c:out value="${o.status}" /></span>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <span class="badge" style="background: ${o.statusBg}; color: ${o.statusColor};">
+                                        <c:out value="${o.statusLabel}" />
+                                    </span>
                                 </td>
                                 <td style="text-align: center;">
                                     <a href="${ctx}/user/orders?id=${o.orderId}" class="btn btn-secondary btn-sm">

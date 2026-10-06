@@ -17,6 +17,7 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import vn.iotstar.util.OrderStatus_24110344;
 
 @Entity
 @Table(name = "Orders")
@@ -24,7 +25,8 @@ public class Order_24110344 implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String STATUS_PENDING = "PENDING";
+	// Don hang moi = "0"
+	public static final String STATUS_NEW = OrderStatus_24110344.NEW.getCode();
 
 	public static final String PAYMENT_COD = "COD";
 
@@ -55,7 +57,7 @@ public class Order_24110344 implements Serializable {
 	private String paymentMethod = PAYMENT_COD;
 
 	@Column(name = "Status", columnDefinition = "NVARCHAR(20)", nullable = false)
-	private String status = STATUS_PENDING;
+	private String status = STATUS_NEW;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "OrderDate", nullable = false)
@@ -154,5 +156,27 @@ public class Order_24110344 implements Serializable {
 
 	public void setDetails(List<OrderDetail_24110344> details) {
 		this.details = details;
+	}
+
+	// Ham ho tro hien thi (JSP). Entity dung field access nen khong anh xa
+	// xuong DB
+
+	public OrderStatus_24110344 getStatusInfo() {
+		return OrderStatus_24110344.fromCode(status);
+	}
+
+	public String getStatusLabel() {
+		OrderStatus_24110344 s = getStatusInfo();
+		return s != null ? s.getLabel() : status;
+	}
+
+	public String getStatusBg() {
+		OrderStatus_24110344 s = getStatusInfo();
+		return s != null ? s.getBg() : "#e2e8f0";
+	}
+
+	public String getStatusColor() {
+		OrderStatus_24110344 s = getStatusInfo();
+		return s != null ? s.getColor() : "#334155";
 	}
 }

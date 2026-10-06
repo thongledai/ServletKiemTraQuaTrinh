@@ -2,10 +2,13 @@ package vn.iotstar.dao.impl;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 import vn.iotstar.config.JPAConfig_24110344;
 import vn.iotstar.dao.OrderDao_24110344;
 import vn.iotstar.entity.CartItem_24110344;
@@ -43,7 +46,7 @@ public class OrderDaoImpl_24110344 implements OrderDao_24110344 {
 			order.setAddress(address);
 			order.setNote(note);
 			order.setPaymentMethod(Order_24110344.PAYMENT_COD);
-			order.setStatus(Order_24110344.STATUS_PENDING);
+			order.setStatus(Order_24110344.STATUS_NEW);
 			order.setOrderDate(new Date());
 
 			BigDecimal total = BigDecimal.ZERO;
@@ -132,6 +135,52 @@ public class OrderDaoImpl_24110344 implements OrderDao_24110344 {
 
 			return result.isEmpty() ? null : result.get(0);
 
+		} finally {
+			em.close();
+		}
+	}
+
+	@Override
+	public List<Order_24110344> findByUsernameAndStatus(String username, String status) {
+
+		EntityManager em = JPAConfig_24110344.getEntityManager();
+
+		try {
+			String jpql = "SELECT o FROM Order_24110344 o WHERE o.username = :username"
+					+ (status != null ? " AND o.status = :status" : "") + " ORDER BY o.orderDate DESC, o.orderId DESC";
+
+			TypedQuery<Order_24110344> query = em.createQuery(jpql, Order_24110344.class);
+			query.setParameter("username", username);
+
+			if (status != null) {
+				query.setParameter("status", status);
+			}
+
+			return query.getResultList();
+		} finally {
+			em.close();
+		}
+	}
+
+	@Override
+	public Map<String, Long> countByStatus(String username) {
+
+		EntityManager em = JPAConfig_24110344.getEntityManager();
+
+		try {
+			List<Object[]> rows = em
+					.createQuery("SELECT o.status, COUNT(o) FROM Order_24110344 o "
+							+ "WHERE o.username = :username GROUP BY o.status", Object[].class)
+					.setParameter("username", username).getResultList();
+
+			Map<String, Long> result = new LinkedHashMap<>();
+
+			for (Object[] row : rows) {
+				String key = row[0] == null ? "" : row[0].toString().trim();
+				result.merge(key, ((Number) row[1]).longValue(), Long::sum);
+			}
+
+			return result;
 		} finally {
 			em.close();
 		}

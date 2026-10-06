@@ -1,6 +1,7 @@
 package vn.iotstar.service;
 
 import java.util.List;
+import java.util.Map;
 
 import vn.iotstar.entity.Order_24110344;
 
@@ -11,4 +12,8 @@ public interface OrderService_24110344 {
 	List<Order_24110344> findByUsername(String username);
 
 	Order_24110344 findByIdAndUsername(Integer orderId, String username);
+
+	List<Order_24110344> findByUsernameAndStatus(String username, String status);
+
+	Map<String, Long> countByStatus(String username);
 }
